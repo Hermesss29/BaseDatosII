@@ -1,0 +1,72 @@
+Creacion de roles 
+
+-- Administrador agencia
+CREATE ROLE administrador_agencia LOGIN PASSWORD 'admin123';
+
+-- Agente
+CREATE ROLE agente LOGIN PASSWORD 'agente123';
+
+-- Cliente
+CREATE ROLE cliente LOGIN PASSWORD 'cliente123';
+
+-- Propietario
+CREATE ROLE propietario LOGIN PASSWORD 'propietario123';
+
+
+
+Creación usuario
+
+
+-- Usuario Juan como agente
+CREATE USER juan_agente WITH PASSWORD 'seguro123';
+GRANT agente TO juan_agente;
+
+-- Usuario Pedro como cliente
+CREATE USER pedro_cliente WITH PASSWORD 'seguro123';
+GRANT cliente TO pedro_cliente;
+
+-- Usuario Andrea como administrador
+CREATE USER andrea_admin WITH PASSWORD 'adminstrong';
+GRANT administrador_agencia TO andrea_admin;
+
+
+
+asignación de permisos por roles: 
+
+Admin
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO administrador_agencia;
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO administrador_agencia;
+
+agente
+
+GRANT SELECT ON Propiedades, Clientes TO agente;
+GRANT INSERT ON Visitas TO agente;
+GRANT SELECT, INSERT, UPDATE ON Contratos TO agente;
+
+
+cliente
+
+GRANT SELECT ON Propiedades TO cliente;
+GRANT INSERT ON Ofertas, Visitas TO cliente;
+GRANT SELECT ON Ofertas TO cliente;
+
+
+propietario
+
+GRANT SELECT ON Propiedades TO propietario;
+GRANT SELECT ON Visitas TO propietario;
+
+
+
+ejemplo vista para cliente basada en filtrado
+
+
+CREATE VIEW propiedades_disponibles AS
+SELECT * FROM Propiedades
+WHERE estado = 'A'; -- disponibles
+GRANT SELECT ON propiedades_disponibles TO cliente;
+
+
+
+
+
